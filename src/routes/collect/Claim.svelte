@@ -4,20 +4,17 @@
   import { authStore } from '../../lib/stores/auth.js'
   import Wordmark from '../../lib/components/Wordmark.svelte'
 
-  export let params = {}
-  export let onDone = () => {}
-  export let onBack = () => {}
-  export let onHome = null
+  let { params = {}, onDone = () => {}, onBack = () => {}, onHome = null } = $props()
 
-  let post = null
-  let loading = true
+  let post = $state(null)
+  let loading = $state(true)
 
   // quantities[item.id] = number user wants to claim
-  let quantities = {}
+  let quantities = $state({})
 
-  let error   = ''
-  let success = false
-  let submitting = false
+  let error   = $state('')
+  let success = $state(false)
+  let submitting = $state(false)
 
   onMount(async () => {
     const { data, error: e } = await supabase
@@ -45,12 +42,14 @@
     quantities = { ...quantities }
   }
 
-  function totalSelected() {
+  let totalSelectedCount = $derived.by(getTotalSelected)
+
+  function getTotalSelected() {
     return Object.values(quantities).reduce((s, v) => s + v, 0)
   }
 
   async function confirm() {
-    if (totalSelected() === 0) { error = 'Select at least one parcel to claim.'; return }
+    if (getTotalSelected() === 0) { error = 'Select at least one parcel to claim.'; return }
     submitting = true; error = ''
     const user = $authStore.user
     if (!user) { error = 'Not logged in'; submitting = false; return }
@@ -74,9 +73,9 @@
     return (items || []).reduce((s, i) => s + (i.available ?? 0), 0)
   }
 
-  $: photoUrls = (post?.post_photos || []).map(p =>
+  let photoUrls = $derived((post?.post_photos || []).map(p =>
     supabase.storage.from('post-photos').getPublicUrl(p.storage_path).data.publicUrl
-  )
+  ))
 </script>
 
 <div class="claim-page">
@@ -177,9 +176,9 @@
           id="btn-confirm-claim"
           class="btn btn-primary"
           on:click={confirm}
-          disabled={submitting || totalSelected() === 0}
+          disabled={submitting || totalSelectedCount === 0}
         >
-          {submitting ? 'Confirming…' : `Confirm claim (${totalSelected()} parcel${totalSelected() !== 1 ? 's' : ''})`}
+          {submitting ? 'Confirming…' : `Confirm claim (${getTotalSelected()} parcel${getTotalSelected() !== 1 ? 's' : ''})`}
         </button>
       </div>
     {/if}

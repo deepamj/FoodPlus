@@ -125,7 +125,10 @@ begin
     update post_items set available = available - claimed where id = item_row.id;
   end loop;
   insert into claims (post_id, ngo_id, quantities) values (p_post_id, p_ngo_id, p_quantities);
-  update posts set status = 'claimed' where id = p_post_id;
+  -- Mark claimed only when every parcel is claimed (available = 0 for all items)
+  if not exists (select 1 from post_items where post_id = p_post_id and available > 0) then
+    update posts set status = 'claimed' where id = p_post_id;
+  end if;
 end;
 $$;
 

@@ -201,6 +201,7 @@ body {
   padding: 14px 24px;
 }
 .btn:active { transform: scale(0.97); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 
 .btn-primary {
   background: var(--accent);
