@@ -17,8 +17,8 @@ create table if not exists profiles (
 );
 alter table profiles enable row level security;
 create policy "profiles: own row" on profiles for all using (auth.uid() = id);
-create policy "profiles: ngo read all" on profiles for select using (
-  exists (select 1 from profiles p where p.id = auth.uid() and p.user_type = 'ngo')
+create policy "profiles: anon read all" on profiles for select using (
+  auth.uid() is not null
 );
 
 -- -------------------------------------------------------
@@ -36,9 +36,8 @@ create table if not exists posts (
 );
 alter table posts enable row level security;
 create policy "posts: donor owns" on posts for all using (auth.uid() = donor_id);
-create policy "posts: ngo reads posted" on posts for select using (
-  status = 'posted' and
-  exists (select 1 from profiles p where p.id = auth.uid() and p.user_type = 'ngo')
+create policy "posts: anon reads posted" on posts for select using (
+  status = 'posted' and auth.uid() is not null
 );
 
 -- -------------------------------------------------------
@@ -60,7 +59,7 @@ create policy "post_items: donor owns" on post_items for all using (
 create policy "post_items: ngo reads" on post_items for select using (
   exists (
     select 1 from posts po where po.id = post_id and po.status = 'posted'
-    and exists (select 1 from profiles p where p.id = auth.uid() and p.user_type = 'ngo')
+    and auth.uid() is not null
   )
 );
 
@@ -80,7 +79,7 @@ create policy "post_photos: donor owns" on post_photos for all using (
 create policy "post_photos: ngo reads" on post_photos for select using (
   exists (
     select 1 from posts po where po.id = post_id and po.status in ('posted','claimed')
-    and exists (select 1 from profiles p where p.id = auth.uid() and p.user_type = 'ngo')
+    and auth.uid() is not null
   )
 );
 

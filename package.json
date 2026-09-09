@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.50.0",
-    "leaflet": "^1.9.4"
+    "leaflet": "^1.9.4",
+    "svelte-spa-router": "^5.1.1"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^7.3.0",
