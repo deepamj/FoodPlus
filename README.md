@@ -2,7 +2,7 @@
 
 Surplus food-to-NGO connector — a platform where canteens, restaurants, and event organizers post surplus food, and nearby NGOs claim and arrange pickup.
 
-**Live site:** [FoodPlus+]([https://your-deployed-url.vercel.app](https://foodplus-app.surge.sh))
+**Live site:** [FoodPlus+](https://foodplus-app.surge.sh)
 
 
 Built by Team hal9k.
