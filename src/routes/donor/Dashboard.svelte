@@ -35,15 +35,28 @@
     posts = data || []
   }
 
-  async function markCollected(postId) {
-    markingId = postId
+  function claimedParcels(post) {
+    return (post.claims || []).reduce(
+      (s, c) => s + Object.values(c.quantities || {}).reduce((a, q) => a + q, 0), 0)
+  }
+  function totalParcels(items) {
+    return (items || []).reduce((s, i) => s + (i.quantity ?? 0), 0)
+  }
+
+  async function markCollected(post) {
+    const remain = totalParcels(post.post_items) - claimedParcels(post)
+    if (remain > 0) {
+      const ok = confirm(`${remain} parcel${remain !== 1 ? 's' : ''} remain unclaimed. Marking as collected removes this post from the feed. Continue?`)
+      if (!ok) return
+    }
+    markingId = post.id
     const { error: e } = await supabase
       .from('posts')
       .update({ status: 'collected' })
-      .eq('id', postId)
+      .eq('id', post.id)
     markingId = null
     if (e) { alert(e.message); return }
-    posts = posts.map(p => p.id === postId ? { ...p, status: 'collected' } : p)
+    posts = posts.map(p => p.id === post.id ? { ...p, status: 'collected' } : p)
   }
 
   async function logout() {
@@ -108,14 +121,15 @@
             {/each}
           </div>
 
-          {#if post.status === 'claimed' && post.claims?.length > 0}
+          {#if post.status !== 'collected' && post.claims?.length > 0}
             <div style="background:var(--accent-muted);border-radius:var(--radius-xs);padding:10px;font-size:.82rem;margin-top:8px">
               <strong>Claimed by:</strong> {post.claims[0].profiles?.org_name || post.claims[0].profiles?.name || 'NGO'}
               <br>
+              <span>{claimedParcels(post)} of {totalParcels(post.post_items)} parcels claimed</span>
               <button
                 class="btn btn-primary btn-sm mt-8"
                 style="width:auto;display:inline-flex;align-items:center;gap:6px"
-                on:click={() => markCollected(post.id)}
+                on:click={() => markCollected(post)}
                 disabled={markingId === post.id}
               >
                 {#if markingId !== post.id}
