@@ -1,43 +1,54 @@
-# Svelte + Vite
+# FoodPlus+
 
-This template should help get you started developing with Svelte in Vite.
+Surplus food-to-NGO connector — a platform where canteens, restaurants, and event organizers post surplus food, and nearby NGOs claim and arrange pickup.
 
-## Recommended IDE Setup
+Built by Team hal9k.
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+## The Problem
 
-## Need an official Svelte framework?
+Significant amounts of edible food are discarded daily by canteens, hostels, restaurants, and event caterers because there is no fast, reliable way to connect that surplus with the NGOs who could redistribute it. This is a coordination gap, not a supply or demand problem.
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+## The Solution
 
-## Technical considerations
+A three-stage workflow: post, claim, collect.
 
-**Why use this over SvelteKit?**
+- Donors (canteens, restaurants, caterers) report surplus food through a short form — address, item details, photos.
+- NGOs browse live listings and claim a specific quantity of parcels.
+- Donors mark the post as collected once pickup is complete.
 
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
+## Key Features
 
-This template contains as little as possible to get started with Vite + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
+- Role-based authentication for Donors and NGOs
+- Interactive map with location search (OpenStreetMap + Nominatim) for pickup addresses
+- Itemized food posting with name, quantity, veg/non-veg classification, and photos
+- Bounded claiming — claims are processed atomically at the database level, preventing two NGOs from over-claiming the same donation
+- Status tracking: posted → claimed → collected
+- Responsive layout, mobile-first
 
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
+## Tech Stack
 
-**Why include `.vscode/extensions.json`?**
+| Layer | Technology |
+|---|---|
+| Frontend | Svelte + Vite |
+| Backend | Supabase (PostgreSQL, Auth, Storage) |
+| Maps | Leaflet.js + OpenStreetMap |
+| Security | Row-Level Security, atomic claim transaction |
 
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
+## Implementation Notes
 
-**Why enable `checkJs` in the JS template?**
+Claims are handled through a single PostgreSQL function (`SECURITY DEFINER`) that validates availability, decrements stock, inserts the claim record, and updates post status in one transaction — avoiding race conditions when multiple NGOs claim from the same post concurrently.
 
-It is likely that most cases of changing variable types in runtime are likely to be accidental, rather than deliberate. This provides advanced typechecking out of the box. Should you like to take advantage of the dynamically-typed nature of JavaScript, it is trivial to change the configuration.
+Profile creation on signup is handled via a database trigger rather than a client-side insert, avoiding authentication-timing issues with Row-Level Security.
+## Future Scope
 
-**Why is HMR not preserving my local component state?**
+- Real-time notifications when a post is claimed
+- Radius-based search for NGOs
+- Impact analytics (meals redistributed, waste diverted)
+- Native mobile apps
 
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/sveltejs/svelte-hmr/tree/master/packages/svelte-hmr#preservation-of-local-state).
+## Team hal9k
 
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
-
-```js
-// store.js
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
-```
+- Nikhil M Warrier
+- Deepa Mary Jose
+- Deva Nanda Sumod
+- Johann Thomas Philip
