@@ -35,11 +35,12 @@
 
     <div class="landing-cta-grid">
       <div class="landing-cta-col">
-        <p>Are you a caterer, restaurant, or a volunteer?</p>
+        <p>Are you a caterer or a volunteer?</p>
         <button id="btn-report-surplus" class="btn btn-primary" style="border-radius:var(--radius-xs);font-size:.9rem;padding:12px 16px" on:click={goReport}>
           Report Surplus
         </button>
       </div>
+      <div class="border"></div>
       <div class="landing-cta-col">
         <p>Are you an NGO, charity, or a food bank?</p>
         <button id="btn-collect-surplus" class="btn btn-primary" style="border-radius:var(--radius-xs);font-size:.9rem;padding:12px 16px" on:click={goCollect}>

@@ -68,7 +68,8 @@ body {
 
 /* ── Page header ────────────────────────────────────────── */
 .page-header {
-  padding: 20px 24px 0;
+  padding: 1rem !important;
+  margin-top: 1rem;
 }
 .page-title {
   font-family: 'Inter', sans-serif;
@@ -118,7 +119,7 @@ body {
 .step-bar {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 1rem;
   padding: 12px 24px 0;
 }
 .step-row {
@@ -141,6 +142,7 @@ body {
   flex-shrink: 0;
 }
 .step-connector {
+  display: none;
   width: 2px;
   flex: 1;
   min-height: 24px;
@@ -576,7 +578,6 @@ body {
   font-family: 'Playfair Display', serif;
   font-size: 1.8rem;
   font-weight: 800;
-  line-height: 1.2;
   margin-bottom: 14px;
   color: var(--text);
 }
@@ -600,19 +601,26 @@ body {
   margin-bottom: 16px;
 }
 .landing-cta-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
-  border: 2px solid var(--text);
-  border-radius: var(--radius-sm);
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
   overflow: hidden;
 }
+
 .landing-cta-col {
-  padding: 16px 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  padding: 0;
+  flex: 1;
 }
-.landing-cta-col + .landing-cta-col {
-  border-left: 2px solid var(--text);
+
+.border {
+    width: 2px;
+    background: rgba(from var(--text) r g b / 0.2);
 }
+
 .landing-cta-col p {
   font-size: 0.82rem;
   color: var(--text-muted);
