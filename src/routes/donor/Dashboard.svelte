@@ -6,6 +6,7 @@
 
   export let onNewPost = () => {}
   export let onLogout  = () => {}
+  export let onHome = null
 
   let posts   = []
   let loading = true
@@ -61,7 +62,7 @@
 <div class="dash-page">
   <div class="page-header" style="padding-bottom:16px">
     <div style="display:flex;align-items:center;justify-content:space-between">
-      <Wordmark />
+      <Wordmark onClick={onHome} />
       <button class="btn btn-ghost btn-sm" on:click={logout}>Log out</button>
     </div>
     <h1 class="page-title">My surplus posts</h1>

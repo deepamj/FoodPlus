@@ -5,12 +5,17 @@
 
   export let onNext = () => {}
   export let onBack = () => {}
+  export let onHome = null
 
   let address = $draft.address
   let lat = $draft.lat || 28.6139
   let lng = $draft.lng || 77.2090
 
-  function handlePick(la, ln) { lat = la; lng = ln }
+
+  function handlePick(la, ln, label) {
+  lat = la; lng = ln
+  if (label) address = label
+}
 
   function next() {
     if (!address.trim()) { alert('Please enter an address.'); return }
@@ -27,7 +32,7 @@
           <path d="M19 12H5M12 5l-7 7 7 7"/>
         </svg>
       </button>
-      <Wordmark />
+      <Wordmark onClick={onHome} />
     </div>
     <h1 class="page-title">Report surplus</h1>
   </div>

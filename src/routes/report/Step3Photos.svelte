@@ -6,6 +6,7 @@
 
   export let onDone = () => {}
   export let onBack = () => {}
+  export let onHome = null
 
   let previews = [...($draft.photoPreviews || [])]
   let files    = [...($draft.photos || [])]
@@ -96,7 +97,7 @@
           <path d="M19 12H5M12 5l-7 7 7 7"/>
         </svg>
       </button>
-      <Wordmark />
+      <Wordmark onClick={onHome} />
     </div>
     <h1 class="page-title">Report surplus</h1>
   </div>

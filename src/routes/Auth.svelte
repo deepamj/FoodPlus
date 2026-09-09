@@ -3,6 +3,8 @@
   import Wordmark from '../lib/components/Wordmark.svelte'
 
   export let onAuth = () => {}   // called after successful auth
+  export let onBack = () => {}
+  export let onHome = null
 
   let tab = 'login'   // 'login' | 'signup'
   let email = '', password = '', name = '', orgName = '', userType = 'donor'
@@ -19,23 +21,37 @@
   async function handleSignup() {
     loading = true; error = ''
     if (!name.trim()) { error = 'Please enter your name.'; loading = false; return }
-    const { data, error: e } = await supabase.auth.signUp({ email, password })
-    if (e) { error = e.message; loading = false; return }
-    // Create profile row
-    const { error: pe } = await supabase.from('profiles').insert({
-      id: data.user.id,
-      name: name.trim(),
-      org_name: orgName.trim() || null,
-      user_type: userType
+
+    // Pass profile fields as user metadata so the DB trigger can
+    // create the profiles row with superuser privileges, bypassing RLS.
+    const { error: e } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          name:      name.trim(),
+          org_name:  orgName.trim() || null,
+          user_type: userType,
+        }
+      }
     })
     loading = false
-    if (pe) { error = pe.message; return }
+    if (e) { error = e.message; return }
     onAuth()
   }
 </script>
 
 <div class="auth-page">
-  <Wordmark />
+  <div class="page-header" style="padding-bottom:16px">
+    <div class="page-nav">
+      <button class="back-btn" on:click={onBack} aria-label="Go back">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M12 5l-7 7 7 7"/>
+        </svg>
+      </button>
+      <Wordmark onClick={onHome} />
+    </div>
+  </div>
 
   <div class="auth-tabs">
     <button class="auth-tab" class:active={tab==='login'} on:click={() => tab='login'}>Log in</button>

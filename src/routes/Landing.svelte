@@ -2,6 +2,7 @@
   import Wordmark from '../lib/components/Wordmark.svelte'
   export let goReport = () => {}
   export let goCollect = () => {}
+  export let onHome = null
 </script>
 
 <div id="landing-page">
@@ -9,7 +10,7 @@
   <div class="landing-accent-strip" aria-hidden="true"></div>
 
   <div class="page-header" style="padding-bottom:0">
-    <Wordmark />
+    <Wordmark onClick={onHome} />
   </div>
 
   <!-- Clean food photo — no text baked in -->

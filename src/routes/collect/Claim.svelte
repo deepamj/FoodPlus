@@ -6,12 +6,10 @@
   export let post   // full post object from Browse
   export let onDone = () => {}
   export let onBack = () => {}
+  export let onHome = null
 
   // quantities[item.id] = number user wants to claim
-  let quantities = {}
-  post.post_items?.forEach(item => {
-    quantities[item.id] = 0
-  })
+  let quantities = Object.fromEntries((post.post_items || []).map(item => [item.id, 0]))
 
   let loading = false
   let error   = ''
@@ -69,7 +67,7 @@
           <path d="M19 12H5M12 5l-7 7 7 7"/>
         </svg>
       </button>
-      <Wordmark />
+      <Wordmark onClick={onHome} />
     </div>
     <h1 class="page-title">{post.profiles?.org_name || post.profiles?.name || 'Donor'}</h1>
     <p class="text-muted" style="font-size:.85rem;margin-top:4px">{post.address}</p>

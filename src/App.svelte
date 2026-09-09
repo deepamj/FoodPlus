@@ -42,6 +42,8 @@
   }
 
   function onLogout() { view = 'landing' }
+
+  function goLanding() { view = 'landing' }
 </script>
 
 <div id="app">
@@ -52,36 +54,41 @@
     <Landing goReport={goReport} goCollect={goCollect} />
 
   {:else if view === 'auth'}
-    <Auth onAuth={afterAuth} />
+    <Auth onAuth={afterAuth} onBack={goLanding} onHome={goLanding} />
 
   {:else if view === 'report1'}
     <Step1
       onNext={() => view = 'report2'}
       onBack={() => view = 'donor-dash'}
+      onHome={goLanding}
     />
 
   {:else if view === 'report2'}
     <Step2
       onNext={() => view = 'report3'}
       onBack={() => view = 'report1'}
+      onHome={goLanding}
     />
 
   {:else if view === 'report3'}
     <Step3
       onDone={() => view = 'donor-dash'}
       onBack={() => view = 'report2'}
+      onHome={goLanding}
     />
 
   {:else if view === 'donor-dash'}
     <Dashboard
       onNewPost={() => view = 'report1'}
       onLogout={onLogout}
+      onHome={goLanding}
     />
 
   {:else if view === 'collect-browse'}
     <Browse
       onSelect={(post) => { claimPost = post; view = 'collect-claim' }}
-      onBack={() => view = 'landing'}
+      onBack={goLanding}
+      onHome={goLanding}
     />
 
   {:else if view === 'collect-claim'}
@@ -89,6 +96,7 @@
       post={claimPost}
       onDone={() => view = 'collect-browse'}
       onBack={() => view = 'collect-browse'}
+      onHome={goLanding}
     />
   {/if}
 </div>

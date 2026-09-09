@@ -6,6 +6,7 @@
 
   export let onSelect = (post) => {}
   export let onBack = () => {}
+  export let onHome = null
 
   let posts = []
   let loading = true
@@ -36,7 +37,7 @@
           <path d="M19 12H5M12 5l-7 7 7 7"/>
         </svg>
       </button>
-      <Wordmark />
+      <Wordmark onClick={onHome} />
     </div>
     <h1 class="page-title">Collect Surplus</h1>
   </div>
